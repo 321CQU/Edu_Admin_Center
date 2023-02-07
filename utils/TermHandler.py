@@ -50,10 +50,7 @@ class TermHandler:
 
         await TermHandler.has_fetched.wait()
 
-        if term_offset == 0:
-            return TermHandler.curr_term
-
-        target_term = TermHandler._get_target_term(term_offset)
+        target_term = TermHandler._get_target_term(term_offset) if term_offset != 0 else TermHandler.curr_term.session
         result = list(filter(lambda x: x.session.year == target_term.year and
                                        x.session.is_autumn == target_term.is_autumn, TermHandler.term_list))
         if len(result) > 0:
