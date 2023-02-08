@@ -13,6 +13,7 @@ from micro_services_protobuf.mycqu_service import mycqu_service_pb2_grpc as mycq
 from micro_services_protobuf.mycqu_service import mycqu_request_response_pb2 as mycqu_rr
 
 from _321CQU.tools.gRPCManager import gRPCManager, ServiceEnum
+from _321CQU.tools.gRPCMethodErrorHandler import grpc_method_error_handler
 
 from utils.AuthIdManager import AuthIdManager
 from utils.TermHandler import TermHandler
@@ -51,6 +52,7 @@ DB_TASK: List[Awaitable] = []
 
 
 class EACServicer(eac_grpc.EduAdminCenterServicer):
+    @grpc_method_error_handler()
     async def ValidateAuth(self, request: mycqu_rr.BaseLoginInfo, context):
         async with gRPCManager().get_stub(ServiceEnum.MycquService) as stub:
             stub: mycqu_grpc.MycquFetcherStub = stub
@@ -58,24 +60,28 @@ class EACServicer(eac_grpc.EduAdminCenterServicer):
         AuthIdManager().add_uid(res.id, res.code, res.name)
         return eac_models.ValidateAuthResponse(sid=res.code, auth=res.id, name=res.name)
 
+    @grpc_method_error_handler()
     async def FetchEnrollCourseInfo(self, request: mycqu_rr.FetchEnrollCourseInfoRequest, context):
         async with gRPCManager().get_stub(ServiceEnum.MycquService) as stub:
             stub: mycqu_grpc.MycquFetcherStub = stub
             res = await stub.FetchEnrollCourseInfo(request)
         return res
 
+    @grpc_method_error_handler()
     async def FetchEnrollCourseItem(self, request: mycqu_rr.FetchEnrollCourseItemRequest, context):
         async with gRPCManager().get_stub(ServiceEnum.MycquService) as stub:
             stub: mycqu_grpc.MycquFetcherStub = stub
             res = await stub.FetchEnrollCourseItem(request)
         return res
 
+    @grpc_method_error_handler()
     async def FetchExam(self, request: mycqu_rr.FetchExamRequest, context):
         async with gRPCManager().get_stub(ServiceEnum.MycquService) as stub:
             stub: mycqu_grpc.MycquFetcherStub = stub
             res = await stub.FetchExam(request)
         return res
 
+    @grpc_method_error_handler()
     async def FetchCourseTimetable(self, request: eac_models.FetchCourseTimetableRequest, context: ServicerContext):
         session = await TermHandler.get_term_info(request.login_info, request.offset)
         if session is None or request.offset > 1:
@@ -101,6 +107,7 @@ class EACServicer(eac_grpc.EduAdminCenterServicer):
             start_date=datetime.fromtimestamp(session.begin_date).strftime("%Y-%m-%d"),
             end_date=datetime.fromtimestamp(session.end_date).strftime("%Y-%m-%d"))
 
+    @grpc_method_error_handler()
     async def FetchScore(self, request: eac_models.FetchScoreRequest, context):
         async with gRPCManager().get_stub(ServiceEnum.MycquService) as stub:
             stub: mycqu_grpc.MycquFetcherStub = stub
@@ -109,6 +116,7 @@ class EACServicer(eac_grpc.EduAdminCenterServicer):
         DB_TASK.append(task)
         return result
 
+    @grpc_method_error_handler()
     async def FetchGpaRanking(self, request: mycqu_rr.BaseLoginInfo, context):
         async with gRPCManager().get_stub(ServiceEnum.MycquService) as stub:
             stub: mycqu_grpc.MycquFetcherStub = stub
