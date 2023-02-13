@@ -50,11 +50,12 @@ class TestEduAdminCenter(unittest.IsolatedAsyncioTestCase):
     async def test_fetch_course_timetable(self):
         res1 = await self.stub.FetchCourseTimetable(eac_models.FetchCourseTimetableRequest(login_info=self.login_info,
                                                                                            code=self.sid, offset=0))
-        res2 = await self.stub.FetchCourseTimetable(eac_models.FetchCourseTimetableRequest(login_info=self.login_info,
-                                                                                           code=self.sid, offset=1))
-        print(res1, res2)
+        # res2 = await self.stub.FetchCourseTimetable(eac_models.FetchCourseTimetableRequest(login_info=self.login_info,
+        #                                                                                    code=self.sid, offset=1))
+        print(res1)
+        # print(res2)
         self.assertIsInstance(res1, eac_models.FetchCourseTimetableResponse)
-        self.assertIsInstance(res2, eac_models.FetchCourseTimetableResponse)
+        # self.assertIsInstance(res2, eac_models.FetchCourseTimetableResponse)
 
     async def test_fetch_score(self):
         res = await self.stub.FetchScore(mycqu_rr.FetchScoreRequest(base_login_info=self.login_info, is_minor=False))

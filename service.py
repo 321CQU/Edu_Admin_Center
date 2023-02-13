@@ -57,8 +57,8 @@ class EACServicer(eac_grpc.EduAdminCenterServicer):
         async with gRPCManager().get_stub(ServiceEnum.MycquService) as stub:
             stub: mycqu_grpc.MycquFetcherStub = stub
             res: mycqu_models.UserInfo = await stub.FetchUser(request)
-        AuthIdManager().add_uid(res.id, res.code, res.name)
-        return eac_models.ValidateAuthResponse(sid=res.code, auth=res.id, name=res.name)
+        uid = AuthIdManager().add_uid(res.id, res.code, res.name)
+        return eac_models.ValidateAuthResponse(sid=res.code, auth=res.id, name=res.name, uid=uid.hex())
 
     @grpc_method_error_handler()
     async def FetchEnrollCourseInfo(self, request: mycqu_rr.FetchEnrollCourseInfoRequest, context):
