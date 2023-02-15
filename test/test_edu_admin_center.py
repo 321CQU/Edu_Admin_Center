@@ -26,8 +26,9 @@ class TestEduAdminCenter(unittest.IsolatedAsyncioTestCase):
         await self.channel.close()
 
     async def test_validate_auth(self):
-        res = await self.stub.ValidateAuth(self.login_info)
+        res: eac_models.ValidateAuthResponse = await self.stub.ValidateAuth(self.login_info)
         print(res)
+        print(res.uid)
         self.assertIsInstance(res, eac_models.ValidateAuthResponse)
 
     async def test_fetch_enroll_course_info(self):

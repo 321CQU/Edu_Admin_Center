@@ -7,7 +7,8 @@ from micro_services_protobuf.mycqu_service import mycqu_request_response_pb2 as 
 from micro_services_protobuf.mycqu_service import mycqu_service_pb2_grpc as mycqu_grpc
 from micro_services_protobuf.mycqu_service import mycqu_model_pb2 as mycqu_model
 
-from _321CQU.tools import gRPCManager, ServiceEnum
+from _321CQU.tools import gRPCManager
+from _321CQU.service import ServiceEnum
 
 
 class TermHandler:
