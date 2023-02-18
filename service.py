@@ -34,18 +34,21 @@ async def _add_score_to_cache(fetch_request: eac_models.FetchScoreRequest,
     assert uid is not None
 
     scores: Iterable[mycqu_models.Score] = scores.scores
-    target: List[Tuple[bytes, str, str, float, str, str, str]] = []
+    target: List[Tuple[bytes, str, str, float, str, str, bool, str]] = []
     for score in scores:
         target.append((uid, score.course.code, score.course.name, score.course.credit,
                        score.course.instructor if len(score.course.instructor) else "未知教师",
                        str(score.session.year) + ("秋" if score.session.is_autumn else "春"),
+                       score.study_nature == "初修",
                        score.score))
 
     async with SqlManager().cursor() as cursor:
         cursor: aiomysql.Cursor = cursor
         await cursor.executemany(
-            "insert into ScoreCache (uid, cid, cname, credit, tname, term, score) values "
-            "(%s, %s, %s, %s, %s, %s, %s)", target
+            "insert into ScoreCache (uid, cid, cname, credit, tname, term, is_initial, score) values "
+            "(%s, %s, %s, %s, %s, %s, %s, %s) on duplicate key update "
+            "ScoreCache.cname = cname, ScoreCache.credit = credit, ScoreCache.tname = tname,"
+            "ScoreCache.is_initial = is_initial, ScoreCache.score = score", target
         )
 
 DB_TASK: List[Awaitable] = []
