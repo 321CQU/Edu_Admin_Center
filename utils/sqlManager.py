@@ -3,26 +3,15 @@ from contextlib import asynccontextmanager
 import aiomysql
 
 from _321CQU.tools import Singleton
-
-from utils.tools.configManager import ConfigReader
+from _321CQU.sql_helper import DatabaseConfig
 
 __all__ = ['SqlManager']
 
 
 class SqlManager(metaclass=Singleton):
-    def __init__(self):
-        # self.connect_args = (str(BASE_DIR) + ConfigReader().get_config('DatabaseConfig', 'path'),)
-        self.connect_args = {
-            'host': ConfigReader().get_config('DatabaseConfig', 'host'),
-            'port': int(ConfigReader().get_config('DatabaseConfig', 'port')),
-            'user': ConfigReader().get_config('DatabaseConfig', 'user'),
-            'password': ConfigReader().get_config('DatabaseConfig', 'password'),
-            'db': ConfigReader().get_config('DatabaseConfig', 'targetDatabase')
-        }
-
     @asynccontextmanager
     async def connect(self) -> aiomysql.Connection:
-        async with aiomysql.connect(**self.connect_args) as db:
+        async with aiomysql.connect(**DatabaseConfig.Score.config_dict) as db:
             try:
                 yield db
             except aiomysql.OperationalError as e:
