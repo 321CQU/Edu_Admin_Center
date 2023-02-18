@@ -88,7 +88,7 @@ class EACServicer(eac_grpc.EduAdminCenterServicer):
     async def FetchCourseTimetable(self, request: eac_models.FetchCourseTimetableRequest, context: ServicerContext):
         session = await TermHandler.get_term_info(request.login_info, request.offset)
         if session is None or request.offset > 1:
-            await context.abort(StatusCode.UNAVAILABLE, "无法获取该学期信息")
+            await context.abort(StatusCode.INVALID_ARGUMENT, "无法获取该学期信息")
 
         if request.offset == 1:
             async with gRPCManager().get_stub(ServiceEnum.MycquService) as stub:
