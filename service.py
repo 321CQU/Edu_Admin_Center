@@ -108,7 +108,9 @@ class EACServicer(eac_grpc.EduAdminCenterServicer):
         return eac_models.FetchCourseTimetableResponse(
             course_timetables=timetables.course_timetables,
             start_date=datetime.fromtimestamp(session.begin_date).strftime("%Y-%m-%d"),
-            end_date=datetime.fromtimestamp(session.end_date).strftime("%Y-%m-%d"))
+            end_date=datetime.fromtimestamp(session.end_date).strftime("%Y-%m-%d"),
+            session_name=(str(session.session.year) + ("秋" if session.session.is_autumn else "春"))
+        )
 
     @grpc_method_error_handler()
     async def FetchScore(self, request: eac_models.FetchScoreRequest, context):
