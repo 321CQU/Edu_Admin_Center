@@ -1,6 +1,6 @@
 import asyncio
 import datetime
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal, ROUND_HALF_UP, ROUND_HALF_DOWN
 from typing import List, Optional
 
 from micro_services_protobuf.mycqu_service import mycqu_request_response_pb2 as mycqu_rr
@@ -36,12 +36,14 @@ class TermHandler:
         temp = term_offset + TermHandler.curr_term.session.is_autumn
         target_term = temp % 2
         target_year = TermHandler.curr_term.session.year + \
-                      int(Decimal(str(temp / 2)).quantize(Decimal('0'), rounding=ROUND_HALF_UP))
+                      int(Decimal(str(temp / 2)).quantize(Decimal('0'), rounding=ROUND_HALF_UP if term_offset < 0
+                      else ROUND_HALF_DOWN))
 
         return mycqu_model.CquSession(year=target_year, is_autumn=bool(target_term))
 
     @staticmethod
-    async def get_term_info(login_info: mycqu_rr.BaseLoginInfo, term_offset: int) -> Optional[mycqu_model.CquSessionInfo]:
+    async def get_term_info(login_info: mycqu_rr.BaseLoginInfo, term_offset: int) -> Optional[
+        mycqu_model.CquSessionInfo]:
         if (datetime.datetime.now() - TermHandler.last_update_date).days > 30:
             TermHandler.has_fetched.clear()
             TermHandler.last_update_date = datetime.datetime.now()
