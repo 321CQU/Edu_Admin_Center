@@ -27,9 +27,11 @@ steps:
 
 - name: 新建镜像
   commands:
+    - source $${_321CQU_PUBLIC_REPOSITORY_PATH}/.env
     - cd ./321CQU_Edu_Admin_Center/
-    - docker-compose build
-    - docker-compose up -d
+    - docker build -t $${EDU_ADMIN_CENTER_IMAGE} .
+    - cd $${_321CQU_PUBLIC_REPOSITORY_PATH}
+    - docker-compose up -d $${EDU_ADMIN_CENTER_SERVER_NAME}
     - docker image prune -f
   depends_on:
     - clone
@@ -61,10 +63,16 @@ steps:
       message_color: true
       message_pic: true
       sha_link: true
-    when:
-      status:
-        - success
-        - failure
+
+trigger:
+  branch:
+    - main
+  event:
+    - push
+    - merge
+  status:
+    - success
+    - failure
 
 depends_on:
   - 部署微服务-教务网中心

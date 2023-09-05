@@ -181,6 +181,8 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+.idea/
+
 /utils/config/
 /initSQLDatabase
 grpc_client_test.py
