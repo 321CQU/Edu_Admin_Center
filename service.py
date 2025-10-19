@@ -116,7 +116,8 @@ class EACServicer(eac_grpc.EduAdminCenterServicer):
     async def FetchScore(self, request: eac_models.FetchScoreRequest, context):
         async with gRPCManager().get_stub(ServiceEnum.MycquService) as stub:
             stub: mycqu_grpc.MycquFetcherStub = stub
-            result = await stub.FetchScore(request)
+            # 前端认为is_minor表示是否查询“包括”辅修成绩在内点成绩，因此此处写死逻辑保证返回主修成绩
+            result = await stub.FetchScore(mycqu_rr.FetchScoreRequest(base_login_info=request.base_login_info, is_minor=False))
         task = asyncio.create_task(_add_score_to_cache(request, result))
         DB_TASK.append(task)
         return result

@@ -21,14 +21,14 @@ steps:
   commands:
     - git config --global http.proxy http://127.0.0.1:7890
     - git config --global https.proxy http://127.0.0.1:7890
-    - git clone https://github.com/ZhuLegend/321CQU_Edu_Admin_Center.git
-    - cd ./321CQU_Edu_Admin_Center/
+    - git clone https://github.com/321CQU/Edu_Admin_Center.git
+    - cd ./Edu_Admin_Center/
     - git checkout main
 
 - name: 新建镜像
   commands:
     - source $${_321CQU_PUBLIC_REPOSITORY_PATH}/.env
-    - cd ./321CQU_Edu_Admin_Center/
+    - cd ./Edu_Admin_Center/
     - docker build -t $${EDU_ADMIN_CENTER_IMAGE} .
     - cd $${_321CQU_PUBLIC_REPOSITORY_PATH}
     - docker-compose up -d $${EDU_ADMIN_CENTER_SERVER_NAME}
