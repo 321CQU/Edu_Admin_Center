@@ -116,7 +116,7 @@ class EACServicer(eac_grpc.EduAdminCenterServicer):
     async def FetchScore(self, request: eac_models.FetchScoreRequest, context):
         async with gRPCManager().get_stub(ServiceEnum.MycquService) as stub:
             stub: mycqu_grpc.MycquFetcherStub = stub
-            result = await stub.FetchScore(request)
+            result = await stub.FetchScore(mycqu_rr.FetchScoreRequest(base_login_info=request.base_login_info, is_minor=request.is_minor))
         task = asyncio.create_task(_add_score_to_cache(request, result))
         DB_TASK.append(task)
         return result
