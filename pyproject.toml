@@ -1,0 +1,15 @@
+[project]
+name = "eduadmincenter"
+version = "0.1.0"
+description = "321CQU 后端 EduAdminCenter 微服务"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "aiomysql>=0.2.0",
+    "grpcio>=1.69.0",
+    "protobuf==4.24.2",
+    "prometheus-client>=0.20.0",
+    "pydantic>=2.10.5",
+]
+authors = ["321CQU Developer"]
+license = "AGPL 3.0"
