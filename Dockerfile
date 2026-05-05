@@ -10,6 +10,6 @@ RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple uv \
 
 COPY . .
 
-EXPOSE 53212 93212
+EXPOSE 53212 9322
 
 CMD ["python", "main.py"]

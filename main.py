@@ -20,7 +20,7 @@ def _get_metrics_port():
     try:
         return ConfigReader().get_config("Metrics", "port")
     except ConfigError:
-        return "93212"
+        return "9322"
 
 
 async def serve():
